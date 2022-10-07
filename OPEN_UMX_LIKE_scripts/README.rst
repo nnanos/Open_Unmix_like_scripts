@@ -4,8 +4,10 @@ Time Frequency Analysis Toolbox
 
 Description
 ============
-Time frequency transforms under the mathematical framework of NON STATIONARY GABOR FRAMES as described in the paper  `THEORY, IMPLEMENTATION AND APPLICATIONS OF
-NONSTATIONARY GABOR FRAMES <https://www.sciencedirect.com/science/article/pii/S0377042711004900/>`_. 
+This repository contains some scripts that I wrote within my undergraduate thesis in order to do some experiments in the problem of
+music source separation. I had inspired by the scripts implemented in Open unmix source separation library <https://www.sciencedirect.com/science/article/pii/S0377042711004900/>`_. 
+
+
 IMPLEMENTED:
 
 * STFT
