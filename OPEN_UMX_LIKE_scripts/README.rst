@@ -9,13 +9,13 @@ NONSTATIONARY GABOR FRAMES <https://www.sciencedirect.com/science/article/pii/S0
 IMPLEMENTED:
 
 * STFT
-.. image:: /STFT.png
+.. image:: STFT.png
     
 * CQT
-.. image:: /CQT.png
+.. image:: CQT.png
 
 * SCALE_FRAMES
-.. image:: /SCALE_FRAMES.png
+.. image:: SCALE_FRAMES.png
 
 ============
 
