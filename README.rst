@@ -1,5 +1,5 @@
 =======================================================================
-Experiments in the Music Source Separation
+Experiments in Music Source Separation
 =======================================================================
 
 Description
@@ -49,29 +49,80 @@ music source separation. I had inspired by the scripts implemented in the `Open 
 Usage
 =============
 
-* Machine learning: Pipeline
-    In order to use the scripts for your experiments with the U-Net model architecture and with a Front End of the available, of your choice, you can           by following the steps bellow:
 
+#. PREPARE THE DATA-----------------------------------------------------------------------------------------
 
-For a STFT Front End ::
-
-      python __main__.py --front_end STFT -p "{ a : 1024 , M : 4096 , support : 4096 }" --plot_spectrograms True
-
-
-
-For a CQT Front End ::
-
-      python __main__.py --front_end NSGT_CQT -p "{ ksi_s : 44100 , ksi_min : 32.07 , ksi_max : 3907.07 , B : 12 , matrix_form : 1 }" --plot_spectrograms True  
-     
-     
-
-
-* Inference: Perform Separation
-    After you have finished with the training of your model you can directly use your model to perform a separation to an arbitrary wav file which either       is on your PC (local) or provide a url from youtube as described below: 
+With this script you can create the samples that will be fed in to the Neural Network. You just have to create the musdb wav folder. With this script you can control the sampling rate of the songs to be processed and the desiered Front End that they will be transformed to.  
        
+   COMMAND EXAMPLE: ::
+   
+       python Data.py -dataset-params "{ Wav_folder : /home/nnanos/musdb18_wav , Target_folder : /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24_bass , target_source : bass , Fs : 14700 , seq_dur : 5 , FE_params : { front_end_name : NSGT_CQT , ksi_min : 32.07 , ksi_max : 7000 , B : 24 , matrix_form : 1 } , preproc : None }" 
+    
+  ARGUMENTS EXPLENATION:  
        
-       
+  
+|
+|
 
+#. TRAIN-----------------------------------------------------------------------------------------------
+
+After you have created the dataset you are now ready to begin an experiment with the U-Net model and with the Front-End that you have chosen. 
+       
+   COMMAND EXAMPLE: ::
+   
+       python train.py --root /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24_bass --target bass --output /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24_bass/pretr_model --epochs 1000 --batch-size 32 --target bass
+   
+   
+   
+   ARGUMENTS EXPLENATION:
+
+  
+|
+|
+
+
+#. EVALUATION-------------------------------------------------------------------------------------------------------------------------
+
+   COMMAND EXAMPLE: ::
+   
+       python evaluate.py --method-name  CQT_mine_24_bass  --Model_dir /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24_bass/pretr_model  --root_TEST_dir /home/nnanos/musdb18_wav/test  --target bass  --evaldir  /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24_bass/evaldir_orig_BSS_eval  --cores 1       -eval-params  "{  aggregation_method : median , eval_mthd : BSS_evaluation , nb_chan : 1 , hop : 14700 , win : 14700 }"  
+   
+   
+
+   ARGUMENTS EXPLENATION:   
+   
+|
+|
+   
+#. PLOTTING EVALUATION-----------------------------------------------------------------------------------------  
+
+
+   COMMAND EXAMPLE: ::
+   
+   
+
+   ARGUMENTS EXPLENATION:   
+   
+|
+|
+
+
+#. INFERENCE-----------------------------------------------------------------------------------------  
+
+After you have finished with the training of your model you can directly use your model to perform a separation to an arbitrary wav file which either       is on your PC (local) or provide a url from youtube
+
+   COMMAND EXAMPLE: ::
+   
+       python perform_sep.py --Model_dir /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24_bass/pretr_model --target bass --output /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24_bass/pretr_model --epochs 1000 --batch-size 32 --target bass
+   
+      
+   
+
+   ARGUMENTS EXPLENATION:   
+   
+|
+|
+   
 
 Software License
 ============
