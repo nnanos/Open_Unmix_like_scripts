@@ -52,76 +52,80 @@ Usage
 
 #. PREPARE THE DATA-----------------------------------------------------------------------------------------
 
-With this script you can create the samples that will be fed in to the Neural Network. You just have to create the musdb wav folder. With this script you can control the sampling rate of the songs to be processed and the desiered Front End that they will be transformed to.  
+              With this script you can create the samples that will be fed in to the Neural Network. You just have to create the musdb wav folder. With this script you can control the sampling rate of the songs to be processed and the desired Front-End that they will be transformed to.  
+
+                 COMMAND EXAMPLE: ::
+
+                     python Data.py -dataset-params "{ Wav_folder : /home/nnanos/musdb18_wav , Target_folder : /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24_bass , target_source : bass , Fs : 14700 , seq_dur : 5 , FE_params : { front_end_name : NSGT_CQT , ksi_min : 32.07 , ksi_max : 7000 , B : 24 , matrix_form : 1 } , preproc : None }" 
+
+                ARGUMENTS EXPLANATION:  
        
-   COMMAND EXAMPLE: ::
-   
-       python Data.py -dataset-params "{ Wav_folder : /home/nnanos/musdb18_wav , Target_folder : /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24_bass , target_source : bass , Fs : 14700 , seq_dur : 5 , FE_params : { front_end_name : NSGT_CQT , ksi_min : 32.07 , ksi_max : 7000 , B : 24 , matrix_form : 1 } , preproc : None }" 
-    
-  ARGUMENTS EXPLENATION:  
-       
-  
-|
-|
+       |
+       |
+
 
 #. TRAIN-----------------------------------------------------------------------------------------------
 
-After you have created the dataset you are now ready to begin an experiment with the U-Net model and with the Front-End that you have chosen. 
-       
-   COMMAND EXAMPLE: ::
-   
-       python train.py --root /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24_bass --target bass --output /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24_bass/pretr_model --epochs 1000 --batch-size 32 --target bass
-   
-   
-   
-   ARGUMENTS EXPLENATION:
+       After you have created the dataset you are now ready to begin an experiment with the U-Net model and with the Front-End that you have chosen. 
 
-  
-|
-|
+          COMMAND EXAMPLE: ::
+
+              python train.py --root /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24_bass --target bass --output /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24_bass/pretr_model --epochs 1000 --batch-size 32 --target bass
+
+
+
+          ARGUMENTS EXPLANATION:
+
+
+       |
+       |
 
 
 #. EVALUATION-------------------------------------------------------------------------------------------------------------------------
 
-   COMMAND EXAMPLE: ::
-   
-       python evaluate.py --method-name  CQT_mine_24_bass  --Model_dir /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24_bass/pretr_model  --root_TEST_dir /home/nnanos/musdb18_wav/test  --target bass  --evaldir  /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24_bass/evaldir_orig_BSS_eval  --cores 1       -eval-params  "{  aggregation_method : median , eval_mthd : BSS_evaluation , nb_chan : 1 , hop : 14700 , win : 14700 }"  
-   
-   
+       After you have created the dataset and trained the model (with the above scripts) you are now ready to evaluate the model (compute the BSS performance metrics) with one of the available evaluation methods. In the evaluation phase the songs will be resampled and processed in a block-wise manner exactly as in the training phase.
 
-   ARGUMENTS EXPLENATION:   
-   
-|
-|
+          COMMAND EXAMPLE: ::
+
+              python evaluate.py --method-name  CQT_mine_24_bass  --Model_dir /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24_bass/pretr_model  --root_TEST_dir /home/nnanos/musdb18_wav/test  --target bass  --evaldir  /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24_bass/evaldir_orig_BSS_eval  --cores 1       -eval-params  "{  aggregation_method : median , eval_mthd : BSS_evaluation , nb_chan : 1 , hop : 14700 , win : 14700 }"  
+
+
+
+          ARGUMENTS EXPLANATION:   
+
+       |
+       |
    
 #. PLOTTING EVALUATION-----------------------------------------------------------------------------------------  
 
+       After you have finished with the above phases now you can visualize the results (performance metrics) obtained in the evaluation phase. 
 
-   COMMAND EXAMPLE: ::
-   
-   
+          COMMAND EXAMPLE: ::
+       
+              python Plotting_Eval_metrics.py --evaldirs /home/nnanos/Desktop/Spectrograms_STFT_scipy/evaldir_orig_BSS_eval 
 
-   ARGUMENTS EXPLENATION:   
-   
-|
-|
+
+          ARGUMENTS EXPLANATION:   
+
+       |
+       |
 
 
 #. INFERENCE-----------------------------------------------------------------------------------------  
 
-After you have finished with the training of your model you can directly use your model to perform a separation to an arbitrary wav file which either       is on your PC (local) or provide a url from youtube
+       After you have finished with the training of your model you can directly use your model to perform a separation to an arbitrary wav file which either       is on your PC (local) or provide a url from youtube and perform separation on a youtube track of your preference. The input wav will be resampled at the sampling rate that the model where trained and the processing will be done in a block-wise fashion where the blocks will be of duration seq-dur (the seq-dur that was used to train the model). 
 
-   COMMAND EXAMPLE: ::
-   
-       python perform_sep.py --Model_dir /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24_bass/pretr_model --target bass --output /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24_bass/pretr_model --epochs 1000 --batch-size 32 --target bass
-   
-      
-   
+          COMMAND EXAMPLE: ::
 
-   ARGUMENTS EXPLENATION:   
-   
-|
-|
+              python perform_sep.py --Model_dir /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24_bass/pretr_model --out_filename /home/nnanos/Desktop/tst.wav
+
+
+
+
+          ARGUMENTS EXPLANATION:   
+
+       |
+       |
    
 
 Software License
