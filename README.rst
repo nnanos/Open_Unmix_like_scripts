@@ -59,6 +59,48 @@ Usage
                      python Data.py -dataset-params "{ Wav_folder : /home/nnanos/musdb18_wav , Target_folder : /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24_bass , target_source : bass , Fs : 14700 , seq_dur : 5 , FE_params : { front_end_name : NSGT_CQT , ksi_min : 32.07 , ksi_max : 7000 , B : 24 , matrix_form : 1 } , preproc : None }" 
 
                 ARGUMENTS EXPLANATION:  
+                
+                     * Wav_folder-> It is the PATH of the musdb18_wav dir which have to be in the following structure:
+                     .. image:: /STFT.png
+                     
+
+
+                     * Target_folder-> It is the PATH of the dir (which is created if not exists) in which the following will get saved: 
+                                        * Spec_seg_pair_list_train.pt: a python variable (iterable) which contains the spectrogram training input-output pairs (samples).
+                                        * Spec_seg_pair_list_valid.pt: The same as before but for the validation.
+                     
+                                        * Dataset_Params_log.json: Log which contains the parameters of the Dataset that has been created
+                                        
+
+                     * Fs-> Sampling rate in which the songs to be processed are resampled  
+                     
+                     * seq_dur-> Η διάρκεια της ακολουθίας (σε sec) των παραδειγμάτων εκπαίδευσης τα οποία τροφοδοτούμε στο δίκτυο.
+                     
+                     * FE_params-> Is the parameters of the FE (front end ή input represenation) with which we feed the Neural Net.
+                                   The available FEs and the corresponding arguments are:
+                                   
+                                          * "nsgt_grr" ::
+                                          
+                                                 FE_params : { front_end_name : nsgt_grr , ksi_min : 32.07 , ksi_max : 7000 , B : 187 , matrix_form : 1 }
+                                          
+                                          
+                                          * "librosa" ::
+                                                 
+                                                 FE_params : { front_end_name : librosa , a : 768 , M : 1024 , support : 1024 }
+                                                 
+                                          * "scipy" ::
+                                          
+                                                 FE_params : { front_end_name : scipy , a : 768 , M : 1024 , support : 1024 }
+                                                 
+                                          * "STFT_custom" ::
+                                          
+                                                 FE_params : { front_end_name : STFT_custom , a : 768 , M : 1024 , support : 1024 }
+                                                 
+                                          * "NSGT_CQT" :: 
+                                                 
+                                                 FE_params : { front_end_name : NSGT_CQT , ksi_min : 32.07 , ksi_max : 7000 , B : 24 , matrix_form : 1 }
+                                  
+
        
        |
        |
