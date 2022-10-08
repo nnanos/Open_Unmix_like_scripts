@@ -80,7 +80,7 @@ Usage
                             Sampling rate in which the songs to be processed are resampled  
                      
                      * seq_dur:
-                            Η διάρκεια της ακολουθίας (σε sec) των παραδειγμάτων εκπαίδευσης τα οποία τροφοδοτούμε στο δίκτυο.
+                            The duration of the sequence (in sec) that the samples that we feed the network will be. 
                      
                      * FE_params:
                             Is the parameters of the FE (front end ή input represenation) with which we feed the Neural Net.
@@ -133,21 +133,23 @@ Usage
           ARGUMENTS EXPLANATION:
           
               * root:
-                     Είναι το PATH του dir το οποίο περιέχει τα αρχεία : 
-                     Spec_seg_pair_list_train.pt,Spec_seg_pair_list_valid.pt,Dataset_Params_log.json
-                     και το οποίο δημιουργήθηκε με το προηγούμενο script (Create_Dataset.py). 
-                     Ως εκ τούτου το path αυτό θα πρέπει να είναι ίδιο με το Target_folder (παράμετρος του  Create_Dataset.py)
+                     It is the PATH of the dir which contains the ,necessary for the training, files created from the Data.py script and as a result the path has to be the same as the one in the Target_folder argument of the Data.py script. Just to remind you the files contained in the dir are the following:
+                     * spec_seg_pair_list_train.pt
+                     
+                     * Spec_seg_pair_list_valid.pt
+                     
+                     * Dataset_Params_log.json
+
                      
                      
               * output: 
                      It is the PATH of the dir (which is created if not exists) in which the following files will get saved:
              
-                           * model.pth: Αρχείο απαραίτητο αν θες να χρησιμοποιήσεις το μοντέλο για inference ή για evalution
+                           * model.pth: Necessary file if you want to use the model for inference or evalution
 
-                           * model.json: Αρχείο Log το οποίο περιέχει στοιχεία για την εκπαίδευση (π.χ. trainig-validation losses, execution time, Dataset parameters, arguments του train.py script )
+                           * model.json: Log file that contains info about the training of the model (π.χ. trainig-validation losses, execution time, Dataset parameters, arguments του train.py script )
 
-                           * model.chkpnt: Αρχείο απαραίτητο αν θές να κάνεις συνεχίσεις την εκπαίδευση ενός ήδη εκπαιδευμένου μοντέλου από εκεί που είχε σταματήσει
-
+                           * model.chkpnt: Necessary file if you want to continue the training of a model or Fine-Tune it.
 
               * target:
                      It is the target source that our Neural Net will be trained to separate. 
@@ -159,21 +161,21 @@ Usage
                      
 
 
-              Βασικές Υπερπαράμετροι (hyperparameters) εκπαίδευσης:
+              __Basic training hyperparameters__
 
               * epochs:
-                     Εποχές τις οποίες θα εκπαιδευτεί το Νευρωνικό δίκτυο
+                     Number of epochs that the model will be trained.
 
 
               * batch-size:
-                     Το μέγεθος του batch με το οποίο τροφοδοτούμε το δίκτυο 
-                       (το πλήθος των παραδειγμάτων που του δίνουμε ώστε μετά να κάνει backprop).
-                       Όσο μεγαλύτερο είναι +Με τη διαδικασία εκπαίδευσης θα βρεθεί σίγουρα ένα τοπικό ελάχιστο
-                                            +Γρηγορότερη επεξεργασία καθώς εκμαιταλευόμαστε περισσότερο την GPU
-                                            -Περισσότερες απαιτήσεις σε μνήμη
+                     The batch size that feed the network 
+                       (the number of samples that we simultaneously feed the network before it performs a backprop step).
+                       The bigger it is     +It is more propable that the optimization algorithm will converge to a local minima.
+                                            +Faster processing because we utillize more of the GPU.
+                                            -It requires more memory.
                      
                      
-               * Υπάρχουν και άλλες αλλά καλό θα ήταν να αφεθούν στις Default τιμές:)                     
+               * There are more hyperparameters which can be found `here <https://github.com/sigsep/open-unmix-pytorch/blob/master/docs/training.md>`_  and for the shake of simplicity I do not present them here :).                    
 
 
        |
@@ -194,13 +196,11 @@ Usage
           
 
                * method-name: 
-                     Είναι το όνομα της μεθόδου που κάνουμε evaluate π.χ. μπορεί να θές να 
-                                συγκρίνεις διάφορα FEs εισόδου ή διάφορες αρχιτεκτονικές δικτύων .
-                                Αυτό το όνομα θα φαίνεται στα Logs (μπορείς και να μην το θέσεις).
+                     It is the name of the model that we want to evaluate (i.e. LSTM_CQT_vocals). This parameter exists in order to identify and to compare the model with other models.
 
                * Model_dir: 
-                      Είναι το path για το dir που περιέχει τα απαραίτητα αρχείο για το pretrained μοντέλο.
-                              (θα πρέπει να είναι το ίδιο με το argument output του train.py script)
+                     It is the PATH for the dir that contains all the necessary files for the pretrained model.
+                (it have to be the same as the output argument of the train.py script)
 
                * root_TEST_dir: 
                       It is the PATH of the dir containing the testing wavs and it has to have the structure mentioned above.
@@ -249,10 +249,13 @@ Usage
 
           COMMAND EXAMPLE: ::
        
-              python Plotting_Eval_metrics.py --evaldirs /home/nnanos/Desktop/Spectrograms_STFT_scipy/evaldir_orig_BSS_eval 
+              python Plotting_Eval_metrics.py --evaldirs /home/nnanos/Desktop/Spectrograms_STFT_scipy/evaldir_orig_BSS_eval , /home/nnanos/Desktop/Spectrograms_STFT_librosa/evaldir_orig_BSS_eval
 
 
           ARGUMENTS EXPLANATION:   
+          
+              * evaldirs: 
+                     The Paths of the dirs that contains the output of the previous script (evaluation.py). It may be multiple paths (as indicated in the example above) in case you want compare multiple methods (possibly different models trained possibly with different Front-Ends).
 
        |
        |
@@ -272,11 +275,12 @@ Usage
           ARGUMENTS EXPLANATION:   
           
               * Model_dir:
-                     Είναι το path για το dir που περιέχει τα απαραίτητα αρχείο για το pretrained μοντέλο.
-                (θα πρέπει να είναι το ίδιο με το argument output του train.py script)
+                     It is the PATH for the dir that contains all the necessary files for the pretrained model.
+                (it have to be the same as the output argument of the train.py script)
 
               * out_filename: 
-                     Είναι ένας ήχος για τον οποίο θες να πάρεις απάντηση    
+                     It is the PATH of the wav file (which is created if not exists) in which the output of the model will get saved:
+                         
                      
          |
          |
