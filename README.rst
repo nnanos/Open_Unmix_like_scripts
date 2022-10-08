@@ -14,7 +14,7 @@ music source separation. I had inspired by the scripts implemented in the `Open 
           In fact the possibillities for the different Front Ends are:
                    #. `scipy.signal.stft <https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.stft.html>`_
                    #. `librosa.stft <https://librosa.org/doc/main/generated/librosa.stft.html/>`_
-                   #. `nsgt cqt <https://github.com/grrrr/nsgt>`_                   
+                   #. `nsgt grrrr <https://github.com/grrrr/nsgt>`_                   
                    #. `Time-Frequency Analysis-Synthesis Toolbox <https://github.com/nnanos/Time_Frequency_Analysis>`_  (implemented within this thesis)                                    
         
 
@@ -60,24 +60,31 @@ Usage
 
                 ARGUMENTS EXPLANATION:  
                 
-                     * Wav_folder-> It is the PATH of the musdb18_wav dir which have to be in the following structure:
-                     .. image:: /STFT.png
+                     * Wav_folder:
+                            It is the PATH of the musdb18_wav dir which have to be in the following structure:
+                     
+                     .. image:: Folder_structure.png
                      
 
 
-                     * Target_folder-> It is the PATH of the dir (which is created if not exists) in which the following will get saved: 
+                     * Target_folder: 
+                            It is the PATH of the dir (which is created if not exists) in which the following files will get saved: 
+                                        
                                         * Spec_seg_pair_list_train.pt: a python variable (iterable) which contains the spectrogram training input-output pairs (samples).
                                         * Spec_seg_pair_list_valid.pt: The same as before but for the validation.
                      
                                         * Dataset_Params_log.json: Log which contains the parameters of the Dataset that has been created
                                         
 
-                     * Fs-> Sampling rate in which the songs to be processed are resampled  
+                     * Fs: 
+                            Sampling rate in which the songs to be processed are resampled  
                      
-                     * seq_dur-> Η διάρκεια της ακολουθίας (σε sec) των παραδειγμάτων εκπαίδευσης τα οποία τροφοδοτούμε στο δίκτυο.
+                     * seq_dur:
+                            Η διάρκεια της ακολουθίας (σε sec) των παραδειγμάτων εκπαίδευσης τα οποία τροφοδοτούμε στο δίκτυο.
                      
-                     * FE_params-> Is the parameters of the FE (front end ή input represenation) with which we feed the Neural Net.
-                                   The available FEs and the corresponding arguments are:
+                     * FE_params:
+                            Is the parameters of the FE (front end ή input represenation) with which we feed the Neural Net.
+                            The available FEs and the corresponding arguments are:
                                    
                                           * "nsgt_grr" ::
                                           
@@ -110,13 +117,63 @@ Usage
 
        After you have created the dataset you are now ready to begin an experiment with the U-Net model and with the Front-End that you have chosen. 
 
-          COMMAND EXAMPLE: ::
+          COMMAND EXAMPLE: 
 
-              python train.py --root /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24_bass --target bass --output /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24_bass/pretr_model --epochs 1000 --batch-size 32 --target bass
+              * BEGIN TRAINING ::
+              
+                     python train.py --root /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24_bass --target bass --output /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24_bass/pretr_model --epochs 1000 --batch-size 32 
 
+
+              * CONTINUE TRAINING ::
+              
+                     python train.py --model /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24/pretr_model --checkpoint /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24/pretr_model --root /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24 --target vocals --output /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24/pretr_model --epochs 300 --batch-size 32 --nb-workers 6 
+         
 
 
           ARGUMENTS EXPLANATION:
+          
+              * root:
+                     Είναι το PATH του dir το οποίο περιέχει τα αρχεία : 
+                     Spec_seg_pair_list_train.pt,Spec_seg_pair_list_valid.pt,Dataset_Params_log.json
+                     και το οποίο δημιουργήθηκε με το προηγούμενο script (Create_Dataset.py). 
+                     Ως εκ τούτου το path αυτό θα πρέπει να είναι ίδιο με το Target_folder (παράμετρος του  Create_Dataset.py)
+                     
+                     
+              * output: 
+                     It is the PATH of the dir (which is created if not exists) in which the following files will get saved:
+             
+                           * model.pth: Αρχείο απαραίτητο αν θες να χρησιμοποιήσεις το μοντέλο για inference ή για evalution
+
+                           * model.json: Αρχείο Log το οποίο περιέχει στοιχεία για την εκπαίδευση (π.χ. trainig-validation losses, execution time, Dataset parameters, arguments του train.py script )
+
+                           * model.chkpnt: Αρχείο απαραίτητο αν θές να κάνεις συνεχίσεις την εκπαίδευση ενός ήδη εκπαιδευμένου μοντέλου από εκεί που είχε σταματήσει
+
+
+              * target:
+                     It is the target source that our Neural Net will be trained to separate. 
+                     It can be one of the following strings:
+                            * "vocals"
+                            * "drums"
+                            * "bass"
+                            * "other"
+                     
+
+
+              Βασικές Υπερπαράμετροι (hyperparameters) εκπαίδευσης:
+
+              * epochs:
+                     Εποχές τις οποίες θα εκπαιδευτεί το Νευρωνικό δίκτυο
+
+
+              * batch-size:
+                     Το μέγεθος του batch με το οποίο τροφοδοτούμε το δίκτυο 
+                       (το πλήθος των παραδειγμάτων που του δίνουμε ώστε μετά να κάνει backprop).
+                       Όσο μεγαλύτερο είναι +Με τη διαδικασία εκπαίδευσης θα βρεθεί σίγουρα ένα τοπικό ελάχιστο
+                                            +Γρηγορότερη επεξεργασία καθώς εκμαιταλευόμαστε περισσότερο την GPU
+                                            -Περισσότερες απαιτήσεις σε μνήμη
+                     
+                     
+               * Υπάρχουν και άλλες αλλά καλό θα ήταν να αφεθούν στις Default τιμές:)                     
 
 
        |
@@ -134,13 +191,61 @@ Usage
 
 
           ARGUMENTS EXPLANATION:   
+          
+
+               * method-name: 
+                     Είναι το όνομα της μεθόδου που κάνουμε evaluate π.χ. μπορεί να θές να 
+                                συγκρίνεις διάφορα FEs εισόδου ή διάφορες αρχιτεκτονικές δικτύων .
+                                Αυτό το όνομα θα φαίνεται στα Logs (μπορείς και να μην το θέσεις).
+
+               * Model_dir: 
+                      Είναι το path για το dir που περιέχει τα απαραίτητα αρχείο για το pretrained μοντέλο.
+                              (θα πρέπει να είναι το ίδιο με το argument output του train.py script)
+
+               * root_TEST_dir: 
+                      It is the PATH of the dir containing the testing wavs and it has to have the structure mentioned above.
+
+               * evaldir: 
+                     It is the PATH of the dir (which is created if not exists) in which the following files will get saved:
+              
+                            * Eval_Log.json: Contains the arguments of this script 
+                            * scores.pickle: Contains the performance metrics in a python pickle variable (this will be used by the script below for visualizing these metrics)
+
+
+              * eval-params:
+                     Is the parameters regarding the evaluation method that will be used.
+                     The available evaluation methods and the corresponding arguments are:
+
+                                   * "BSS_evaluation" ::
+
+                                          -eval-params  "{  aggregation_method : median , eval_mthd : BSS_evaluation , nb_chan : 1 , hop : 14700 , win : 14700 }"
+
+
+                                   * "mir_eval" ::
+
+                                          -eval-params  "{  aggregation_method : median , eval_mthd : mir_eval , nb_chan : 1 , hop : 14700 , win : 14700 }"
+
+                                   * "BSSeval_custom" ::
+
+                                          -eval-params  "{  aggregation_method : median , eval_mthd : BSSeval_custom , nb_chan : 1 , hop : 14700 , win : 14700 }"
+
+
+         
 
        |
        |
    
 #. PLOTTING EVALUATION-----------------------------------------------------------------------------------------  
 
-       After you have finished with the above phases now you can visualize the results (performance metrics) obtained in the evaluation phase. 
+       After you have finished with the above phases now you can visualize the results (performance metrics) obtained in the evaluation phase as in the photo below.
+       
+       * Boxplots:
+              .. image:: Boxplots.png
+       
+       
+       * Metrics Aggregated over Frames and over Tracks:
+              .. image:: Agg_frames_tracks.png
+              
 
           COMMAND EXAMPLE: ::
        
@@ -165,6 +270,18 @@ Usage
 
 
           ARGUMENTS EXPLANATION:   
+          
+              * Model_dir:
+                     Είναι το path για το dir που περιέχει τα απαραίτητα αρχείο για το pretrained μοντέλο.
+                (θα πρέπει να είναι το ίδιο με το argument output του train.py script)
+
+              * out_filename: 
+                     Είναι ένας ήχος για τον οποίο θες να πάρεις απάντηση    
+                     
+         |
+         |
+                     
+         USING THE PRETRAINED MODELS THAT I HAVE TRAINED IN MY EXPERIMENTS:
 
        |
        |
