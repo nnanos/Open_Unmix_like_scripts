@@ -62,7 +62,6 @@ Usage
                 
                      * Wav_folder:
                             It is the PATH of the musdb18_wav dir which have to be in the following structure:
-                     
                             .. image:: /Folder_structure.png
                      
 
