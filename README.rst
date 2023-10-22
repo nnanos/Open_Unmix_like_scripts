@@ -58,11 +58,14 @@ Usage
 
                      python Data.py -dataset-params "{ Wav_folder : /home/nnanos/musdb18_wav , Target_folder : /home/nnanos/OPEN_UMX_LIKE_scripts/Spectrograms_NSGT_CQT_mine_24_bass , target_source : bass , Fs : 14700 , seq_dur : 5 , FE_params : { front_end_name : NSGT_CQT , ksi_min : 32.07 , ksi_max : 7000 , B : 24 , matrix_form : 1 } , preproc : None }" 
 
+
                 ARGUMENTS EXPLANATION:  
                 
                      * Wav_folder:
                             It is the PATH of the musdb18_wav dir which have to be in the following structure:
-                            .. image:: /Folder_structure.png
+.. figure:: https://github.com/nnanos/Open_Unmix_like_scripts/blob/main/Folder_structure.png
+       :scale: 20 %
+       :align: center
                      
 
 
@@ -238,12 +241,18 @@ Usage
 
        After you have finished with the above phases now you can visualize the results (performance metrics) obtained in the evaluation phase as in the photo below.
        
+
        * Boxplots:
-              .. image:: Boxplots.png
-       
+
+
+.. figure:: Boxplots.png
+
+
        
        * Metrics Aggregated over Frames and over Tracks:
-              .. image:: Agg_frames_tracks.png
+
+
+.. figure:: Agg_frames_tracks.png
               
 
           COMMAND EXAMPLE: ::
