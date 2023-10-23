@@ -50,7 +50,7 @@ Usage
 =============
 
 
-#. PREPARE THE DATA-----------------------------------------------------------------------------------------
+* PREPARE THE DATA-----------------------------------------------------------------------------------------
 
               With this script you can create the samples that will be fed in to the Neural Network. You just have to create the musdb wav folder. With this script you can control the sampling rate of the songs to be processed and the desired Front-End that they will be transformed to.  
 
@@ -115,7 +115,7 @@ Usage
        |
 
 
-#. TRAIN-----------------------------------------------------------------------------------------------
+* TRAIN-----------------------------------------------------------------------------------------------
 
        After you have created the dataset you are now ready to begin an experiment with the U-Net model and with the Front-End that you have chosen. 
 
@@ -184,7 +184,7 @@ Usage
        |
 
 
-#. EVALUATION-------------------------------------------------------------------------------------------------------------------------
+* EVALUATION-------------------------------------------------------------------------------------------------------------------------
 
        After you have created the dataset and trained the model (with the above scripts) you are now ready to evaluate the model (compute the BSS performance metrics) with one of the available evaluation methods. In the evaluation phase the songs will be resampled and processed in a block-wise manner exactly as in the training phase.
 
@@ -237,7 +237,7 @@ Usage
        |
        |
    
-#. PLOTTING EVALUATION-----------------------------------------------------------------------------------------  
+* PLOTTING EVALUATION-----------------------------------------------------------------------------------------  
 
        After you have finished with the above phases now you can visualize the results (performance metrics) obtained in the evaluation phase as in the photo below.
        
@@ -269,7 +269,7 @@ Usage
        |
 
 
-#. INFERENCE-----------------------------------------------------------------------------------------  
+* INFERENCE-----------------------------------------------------------------------------------------  
 
        After you have finished with the training of your model you can directly use your model to perform a separation to an arbitrary wav file which either       is on your PC (local) or provide a url from youtube and perform separation on a youtube track of your preference. The input wav will be resampled at the sampling rate that the model where trained and the processing will be done in a block-wise fashion where the blocks will be of duration seq-dur (the seq-dur that was used to train the model). 
 
